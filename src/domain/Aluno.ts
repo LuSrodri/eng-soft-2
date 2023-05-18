@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export class Aluno {
+export default class Aluno {
     private id: string;
     private nome: Nome;
     private email: Email;
@@ -30,7 +30,7 @@ export class Aluno {
     }
 }
 
-class Nome {
+export class Nome {
     private nome: string;
 
     constructor(nome: string) {
@@ -45,7 +45,7 @@ class Nome {
     }
 }
 
-class Email {
+export class Email {
     private email: string;
 
     constructor(email: string) {
@@ -62,7 +62,7 @@ class Email {
     }
 }
 
-class Idade {
+export class Idade {
     private idade: number;
 
     constructor(idade: number) {
