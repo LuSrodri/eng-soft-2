@@ -1,6 +1,6 @@
 import { Nome, Email, Idade } from "src/domain/Aluno";
 
-export default class CriarAlunoDTO {
+export default class PostAlunoDTO {
     readonly nome: Nome;
     readonly email: Email;
     readonly idade: Idade;
