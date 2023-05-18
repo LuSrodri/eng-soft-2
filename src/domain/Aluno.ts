@@ -7,10 +7,19 @@ export default class Aluno {
     private idade: Idade;
 
     constructor(nome: string, email: string, idade: number) {
-        this.id = uuidv4();
-        this.nome = new Nome(nome);
-        this.email = new Email(email);
-        this.idade = new Idade(idade);
+        if (!nome || !email || !idade) {
+            throw new Error("Não foi possível criar um aluno. Falta:" + (!nome ? " Nome" : "") + (!email ? " Email" : "") + (!idade ? " Idade" : "") + ".");
+        }
+
+        try {
+            this.id = uuidv4();
+            this.nome = new Nome(nome);
+            this.email = new Email(email);
+            this.idade = new Idade(idade);
+        }
+        catch (e) {
+            throw e;
+        }
     }
 
     getId(): string {

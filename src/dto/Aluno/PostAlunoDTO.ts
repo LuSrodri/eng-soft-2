@@ -1,13 +1,11 @@
-import { Nome, Email, Idade } from "src/domain/Aluno";
-
 export default class PostAlunoDTO {
-    readonly nome: Nome;
-    readonly email: Email;
-    readonly idade: Idade;
+    readonly nome: string;
+    readonly email: string;
+    readonly idade: number;
 
     constructor(nome: string, email: string, idade: number) {
-        this.nome = new Nome(nome);
-        this.email = new Email(email);
-        this.idade = new Idade(idade);
+        this.nome = nome;
+        this.email = email;
+        this.idade = idade;
     }
 }

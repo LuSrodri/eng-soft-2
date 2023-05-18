@@ -1,11 +1,9 @@
-import { Nome, Idade } from "src/domain/Aluno";
-
 export default class GetAlunoDTO {
-    readonly nome: Nome;
-    readonly idade: Idade;
+    readonly nome: string;
+    readonly idade: number;
 
     constructor(nome: string, idade: number) {
-        this.nome = new Nome(nome);
-        this.idade = new Idade(idade);
+        this.nome = nome;
+        this.idade = idade;
     }
 }

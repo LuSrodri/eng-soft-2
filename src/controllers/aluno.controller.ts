@@ -1,12 +1,11 @@
-import { Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { AlunoService } from '../services/aluno.service';
 import GetAlunoDTO from 'src/dto/Aluno/GetAlunoDTO';
-import { Request } from 'express';
 import PostAlunoDTO from 'src/dto/Aluno/PostAlunoDTO';
 
 @Controller('alunos')
 export class AlunoController {
-  constructor(private readonly alunoService: AlunoService) {}
+  constructor(private readonly alunoService: AlunoService) { }
 
   @Get()
   getAlunos(): GetAlunoDTO[] {
@@ -15,18 +14,22 @@ export class AlunoController {
 
   @Get(':id')
   getAlunoById(@Param() params: any): GetAlunoDTO | Error {
-    try{
+    try {
       return this.alunoService.getAlunoById(params.id);
     }
-    catch(error){
+    catch (error) {
       throw error;
     }
   }
 
   @Post()
-  createAluno(@Req() request: Request): { id: string } {
-    const { nome, email, idade } = request.body;
-    const id = this.alunoService.createAluno(new PostAlunoDTO(nome, email, idade));
-    return { id };
+  createAluno(@Body() newAluno: PostAlunoDTO): { id: string } {
+    try {
+      const id = this.alunoService.createAluno(newAluno);
+      return { id };
+    }
+    catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

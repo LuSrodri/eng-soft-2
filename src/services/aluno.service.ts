@@ -6,11 +6,20 @@ import PostAlunoDTO from 'src/dto/Aluno/PostAlunoDTO';
 @Injectable()
 export class AlunoService {
   private alunos: Aluno[] = [];
-  
-  createAluno(newAluno: PostAlunoDTO) :string {
-    const aluno = new Aluno(newAluno.nome.getValue(), newAluno.email.getValue(), newAluno.idade.getValue());
-    this.alunos.push(aluno);
-    return aluno.getId();
+
+  createAluno(newAluno: PostAlunoDTO): string {
+    if (this.alunos.find(x => x.getEmail().getValue() === newAluno.email)) {
+      throw new Error("Já existe um aluno com esse email");
+    }
+
+    try {
+      const aluno = new Aluno(newAluno.nome, newAluno.email, newAluno.idade);
+      this.alunos.push(aluno);
+      return aluno.getId();
+    }
+    catch (e) {
+      throw e;
+    }
   }
 
   getAlunos(): GetAlunoDTO[] {
