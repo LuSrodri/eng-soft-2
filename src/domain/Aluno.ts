@@ -40,6 +40,10 @@ export default class Aluno {
         return this.idade;
     }
 
+    getCursos(): Curso[] {
+        return this.cursos;
+    }
+
     addCurso(curso:Curso): number {
         return this.cursos.push(curso);
     }

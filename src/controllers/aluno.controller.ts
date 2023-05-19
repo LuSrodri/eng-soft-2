@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from '@
 import { AlunoService } from '../services/aluno.service';
 import GetAlunoDTO from 'src/dto/Aluno/GetAlunoDTO';
 import PostAlunoDTO from 'src/dto/Aluno/PostAlunoDTO';
+import GetAlunoVerboseDTO from 'src/dto/Aluno/GetAlunoVerboseDTO';
 
 @Controller('alunos')
 export class AlunoController {
@@ -13,7 +14,7 @@ export class AlunoController {
   }
 
   @Get(':id')
-  getAlunoById(@Param() params: any): GetAlunoDTO | Error {
+  getAlunoById(@Param() params: any): GetAlunoVerboseDTO | Error {
     try {
       return this.alunoService.getAlunoById(params.id);
     }

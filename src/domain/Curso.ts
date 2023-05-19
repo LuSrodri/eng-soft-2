@@ -24,16 +24,24 @@ export default class Curso {
         }
     }
 
+    getId(): string {
+        return this.id;
+    }
+
     getNome() {
-        return this.nome.getValue();
+        return this.nome;
     }
 
     getDescricao() {
-        return this.descricao.getValue();
+        return this.descricao;
     }
 
     getCargaHoraria() {
-        return this.cargaHoraria.getValue();
+        return this.cargaHoraria;
+    }
+
+    getAlunos(): Aluno[] {
+        return this.alunos;
     }
 
     addAluno(aluno: Aluno): number {
