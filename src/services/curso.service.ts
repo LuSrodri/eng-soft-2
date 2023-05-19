@@ -5,6 +5,7 @@ import { AlunoService } from './aluno.service';
 import GetCursoDTO from 'src/dto/Curso/GetCursoDTO';
 import PostCursoDTO from 'src/dto/Curso/PostCursoDTO';
 import GetCursoVerboseDTO from 'src/dto/Curso/GetCursoVerboseDTO';
+import GetAlunoDTO from 'src/dto/Aluno/GetAlunoDTO';
 
 @Injectable()
 export class CursoService {
@@ -40,7 +41,11 @@ export class CursoService {
       throw new HttpException('Curso não encontrado', HttpStatus.NOT_FOUND);
     }
 
-    const alunosMatriculados = this.alunoService.alunos.filter(aluno => curso.getAlunosId().find(alunoId => alunoId === aluno.getId()));
+    const gotAlunosMatriculados: Aluno[] = this.alunoService.alunos.filter(
+      aluno => aluno.getCursos().find(curso => curso.getId() === id)
+    );
+
+    const alunosMatriculados: GetAlunoDTO[] = gotAlunosMatriculados.map<GetAlunoDTO>(aluno => { return new GetAlunoDTO(aluno.getId(), aluno.getNome().getValue(), aluno.getIdade().getValue()) });
 
     return new GetCursoVerboseDTO(curso.getNome().getValue(), curso.getDescricao().getValue(), curso.getCargaHoraria().getValue(), alunosMatriculados);
   }
@@ -57,7 +62,7 @@ export class CursoService {
       throw new HttpException('Aluno não encontrado', HttpStatus.NOT_FOUND);
     }
 
-    if (curso.getAlunosId().find(alunoId => alunoId === idAluno)) {
+    if (curso.getAlunos().find(alunoId => aluno.getId() === idAluno)) {
       throw new HttpException('Aluno já matriculado no curso', HttpStatus.BAD_REQUEST);
     }
 

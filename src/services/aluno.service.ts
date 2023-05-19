@@ -4,6 +4,8 @@ import GetAlunoDTO from 'src/dto/Aluno/GetAlunoDTO';
 import GetAlunoVerboseDTO from 'src/dto/Aluno/GetAlunoVerboseDTO';
 import PostAlunoDTO from 'src/dto/Aluno/PostAlunoDTO';
 import { CursoService } from './curso.service';
+import GetCursoDTO from 'src/dto/Curso/GetCursoDTO';
+import Curso from 'src/domain/Curso';
 
 @Injectable()
 export class AlunoService {
@@ -43,7 +45,11 @@ export class AlunoService {
       throw new HttpException('Aluno não encontrado', HttpStatus.NOT_FOUND);
     }
 
-    const cursosMatriculados = this.cursoService.cursos.filter(curso => curso.getAlunosId().find(alunoId => alunoId === id));
+    const gotCursosMatriculados: Curso[] = this.cursoService.cursos.filter(
+      curso => curso.getAlunos().find(aluno => aluno.getId() == id)
+    );
+
+    const cursosMatriculados: GetCursoDTO[] = gotCursosMatriculados.map<GetCursoDTO>((curso: Curso) => { return new GetCursoDTO(curso.getId(), curso.getNome().getValue(), curso.getDescricao().getValue(), curso.getCargaHoraria().getValue()) } );
 
     return new GetAlunoVerboseDTO(aluno.getNome().getValue(), aluno.getEmail().getValue(), aluno.getIdade().getValue(), cursosMatriculados);
   }

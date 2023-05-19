@@ -6,7 +6,7 @@ export default class Aluno {
     private nome: Nome;
     private email: Email;
     private idade: Idade;
-    private cursosId: string[] = []
+    private cursos: Curso[] = []
 
     constructor(nome: string, email: string, idade: number) {
         if (!nome || !email || !idade) {
@@ -40,12 +40,12 @@ export default class Aluno {
         return this.idade;
     }
 
-    getCursosId(): string[] {
-        return this.cursosId;
+    getCursos(): Curso[] {
+        return this.cursos;
     }
 
     addCurso(curso: Curso): number {
-        return this.cursosId.push(curso.getId());
+        return this.cursos.push(curso);
     }
 }
 
