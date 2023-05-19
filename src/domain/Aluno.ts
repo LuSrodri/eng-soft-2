@@ -1,10 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
+import Curso from './Curso';
 
 export default class Aluno {
     private id: string;
     private nome: Nome;
     private email: Email;
     private idade: Idade;
+    private cursos: Curso[] = []
 
     constructor(nome: string, email: string, idade: number) {
         if (!nome || !email || !idade) {
@@ -36,6 +38,10 @@ export default class Aluno {
 
     getIdade(): Idade {
         return this.idade;
+    }
+
+    addCurso(curso:Curso): number {
+        return this.cursos.push(curso);
     }
 }
 
