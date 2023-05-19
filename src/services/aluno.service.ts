@@ -1,12 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import Aluno from 'src/domain/Aluno';
 import GetAlunoDTO from 'src/dto/Aluno/GetAlunoDTO';
 import GetAlunoVerboseDTO from 'src/dto/Aluno/GetAlunoVerboseDTO';
 import PostAlunoDTO from 'src/dto/Aluno/PostAlunoDTO';
+import { CursoService } from './curso.service';
 
 @Injectable()
 export class AlunoService {
   readonly alunos: Aluno[] = [];
+
+  constructor(@Inject(forwardRef(() => CursoService)) private cursoService: CursoService) { }
 
   createAluno(newAluno: PostAlunoDTO): string {
     if (this.alunos.find(x => x.getEmail().getValue() === newAluno.email)) {
@@ -40,7 +43,9 @@ export class AlunoService {
       throw new HttpException('Aluno não encontrado', HttpStatus.NOT_FOUND);
     }
 
-    return new GetAlunoVerboseDTO(aluno.getNome().getValue(), aluno.getEmail().getValue(), aluno.getIdade().getValue(), aluno.getCursos());
+    const cursosMatriculados = this.cursoService.cursos.filter(curso => curso.getAlunosId().find(alunoId => alunoId === id));
+
+    return new GetAlunoVerboseDTO(aluno.getNome().getValue(), aluno.getEmail().getValue(), aluno.getIdade().getValue(), cursosMatriculados);
   }
 
 }

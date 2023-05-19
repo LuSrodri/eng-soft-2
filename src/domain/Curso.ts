@@ -6,7 +6,7 @@ export default class Curso {
     private nome: Nome;
     private descricao: Descricao;
     private cargaHoraria: CargaHoraria;
-    private alunos: Aluno[] = [];
+    private alunosId: string[] = [];
 
     constructor(nome: string, descricao: string, cargaHoraria: number) {
         if (!nome || !descricao || !cargaHoraria) {
@@ -40,12 +40,12 @@ export default class Curso {
         return this.cargaHoraria;
     }
 
-    getAlunos(): Aluno[] {
-        return this.alunos;
+    getAlunosId(): string[] {
+        return this.alunosId;
     }
 
     addAluno(aluno: Aluno): number {
-        return this.alunos.push(aluno);
+        return this.alunosId.push(aluno.getId());
     }
 }
 

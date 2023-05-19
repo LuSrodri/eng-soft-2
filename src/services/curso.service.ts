@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import Curso from 'src/domain/Curso';
 import Aluno from 'src/domain/Aluno';
 import { AlunoService } from './aluno.service';
@@ -10,7 +10,7 @@ import GetCursoVerboseDTO from 'src/dto/Curso/GetCursoVerboseDTO';
 export class CursoService {
   readonly cursos: Curso[] = [];
 
-  constructor(private alunoService: AlunoService) { }
+  constructor(@Inject(forwardRef(() => AlunoService)) private alunoService: AlunoService) { }
 
   createCurso(newCurso: PostCursoDTO): string {
     try {
@@ -40,7 +40,9 @@ export class CursoService {
       throw new HttpException('Curso não encontrado', HttpStatus.NOT_FOUND);
     }
 
-    return new GetCursoVerboseDTO(curso.getNome().getValue(), curso.getDescricao().getValue(), curso.getCargaHoraria().getValue(), curso.getAlunos());
+    const alunosMatriculados = this.alunoService.alunos.filter(aluno => curso.getAlunosId().find(alunoId => alunoId === aluno.getId()));
+
+    return new GetCursoVerboseDTO(curso.getNome().getValue(), curso.getDescricao().getValue(), curso.getCargaHoraria().getValue(), alunosMatriculados);
   }
 
   matricularAluno(idCurso: string, idAluno: string): boolean {
@@ -55,7 +57,7 @@ export class CursoService {
       throw new HttpException('Aluno não encontrado', HttpStatus.NOT_FOUND);
     }
 
-    if (curso.getAlunos().find(aluno => aluno.getId() === idAluno)) {
+    if (curso.getAlunosId().find(alunoId => alunoId === idAluno)) {
       throw new HttpException('Aluno já matriculado no curso', HttpStatus.BAD_REQUEST);
     }
 
