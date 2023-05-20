@@ -1,4 +1,4 @@
-export default class PostAlunoDTO {
+export default class PostUsuarioDTO {
     readonly nome: string;
     readonly email: string;
     readonly idade: number;

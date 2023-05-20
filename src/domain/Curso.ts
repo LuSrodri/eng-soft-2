@@ -1,16 +1,18 @@
 import { v4 } from "uuid";
 import Aluno from "./Aluno";
+import Autor from "./Autor";
 
 export default class Curso {
     private id: string;
     private nome: Nome;
     private descricao: Descricao;
     private cargaHoraria: CargaHoraria;
+    private autor: Autor;
     private alunos: Aluno[] = [];
 
-    constructor(nome: string, descricao: string, cargaHoraria: number) {
-        if (!nome || !descricao || !cargaHoraria) {
-            throw new Error("Nome, descrição e carga horária são obrigatórios.");
+    constructor(nome: string, descricao: string, cargaHoraria: number, autor: Autor) {
+        if (!nome || !descricao || !cargaHoraria || !autor) {
+            throw new Error("Nome, descrição, carga horária e autor são obrigatórios.");
         }
 
         try {
@@ -18,6 +20,7 @@ export default class Curso {
             this.nome = new Nome(nome);
             this.descricao = new Descricao(descricao);
             this.cargaHoraria = new CargaHoraria(cargaHoraria);
+            this.autor = autor;
         }
         catch (e) {
             throw e;
@@ -40,6 +43,10 @@ export default class Curso {
         return this.cargaHoraria;
     }
 
+    getAutor() {
+        return this.autor;
+    }
+
     getAlunos(): Aluno[] {
         return this.alunos;
     }
@@ -49,7 +56,7 @@ export default class Curso {
     }
 }
 
-export class Nome {
+class Nome {
     private nome: string;
 
     constructor(nome: string) {
@@ -65,7 +72,7 @@ export class Nome {
     }
 }
 
-export class Descricao {
+class Descricao {
     private descricao: string;
 
     constructor(descricao: string) {
@@ -81,7 +88,7 @@ export class Descricao {
     }
 }
 
-export class CargaHoraria {
+class CargaHoraria {
     private cargaHoraria: number;
 
     constructor(cargaHoraria: number) {
