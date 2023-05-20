@@ -2,10 +2,10 @@ import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nest
 import Aluno from 'src/domain/Aluno';
 import GetAlunoDTO from 'src/dto/Aluno/GetAlunoDTO';
 import GetAlunoVerboseDTO from 'src/dto/Aluno/GetAlunoVerboseDTO';
-import PostAlunoDTO from 'src/dto/Aluno/PostAlunoDTO';
 import { CursoService } from './curso.service';
 import GetCursoDTO from 'src/dto/Curso/GetCursoDTO';
 import Curso from 'src/domain/Curso';
+import PostUsuarioDTO from 'src/dto/Usuario/PostUsuarioDTO';
 
 @Injectable()
 export class AlunoService {
@@ -13,7 +13,7 @@ export class AlunoService {
 
   constructor(@Inject(forwardRef(() => CursoService)) private cursoService: CursoService) { }
 
-  createAluno(newAluno: PostAlunoDTO): string {
+  createAluno(newAluno: PostUsuarioDTO): string {
     if (this.alunos.find(x => x.getEmail().getValue() === newAluno.email)) {
       throw new Error("Já existe um aluno com esse email");
     }
