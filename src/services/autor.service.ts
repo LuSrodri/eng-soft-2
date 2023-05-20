@@ -6,15 +6,16 @@ import PostUsuarioDTO from 'src/dto/Usuario/PostUsuarioDTO';
 import Autor from 'src/domain/Autor';
 import GetAutorDTO from 'src/dto/Autor/GetAutorDTO';
 import GetAutorVerboseDTO from 'src/dto/Autor/GetAutorVerboseDTO';
+import { AlunoService } from './aluno.service';
 
 @Injectable()
 export class AutorService {
   readonly autores: Autor[] = [];
 
-  constructor(@Inject(forwardRef(() => CursoService)) private cursoService: CursoService) { }
+  constructor(@Inject(forwardRef(() => AlunoService)) private alunoService: AlunoService, @Inject(forwardRef(() => CursoService)) private cursoService: CursoService) { }
 
-  createAluno(newAutor: PostUsuarioDTO): string {
-    if (this.autores.find(x => x.getEmail().getValue() === newAutor.email)) {
+  createAutor(newAutor: PostUsuarioDTO): string {
+    if (this.autores.find(x => x.getEmail().getValue() === newAutor.email) || this.alunoService.alunos.find(x => x.getEmail().getValue() === newAutor.email)) {
       throw new Error("Já existe um autor com esse email");
     }
 
