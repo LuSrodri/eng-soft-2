@@ -1,27 +1,26 @@
-import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
-import { CursoService } from './curso.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import GetCursoDTO from 'src/dto/Curso/GetCursoDTO';
-import Curso from 'src/domain/Curso';
+import Curso from 'src/domain/curso.entity';
 import PostUsuarioDTO from 'src/dto/Usuario/PostUsuarioDTO';
-import Autor from 'src/domain/Autor';
+import Autor from 'src/domain/autor.entity';
 import GetAutorDTO from 'src/dto/Autor/GetAutorDTO';
 import GetAutorVerboseDTO from 'src/dto/Autor/GetAutorVerboseDTO';
-import { AlunoService } from './aluno.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import Aluno from 'src/domain/aluno.entity';
 
 @Injectable()
 export class AutorService {
-  readonly autores: Autor[] = [];
+  constructor(@InjectRepository(Autor) private autoresRepository: Repository<Autor>, @InjectRepository(Aluno) private alunosRepository: Repository<Aluno>, @InjectRepository(Curso) private cursosRepository: Repository<Curso>) { }
 
-  constructor(@Inject(forwardRef(() => AlunoService)) private alunoService: AlunoService, @Inject(forwardRef(() => CursoService)) private cursoService: CursoService) { }
-
-  createAutor(newAutor: PostUsuarioDTO): string {
-    if (this.autores.find(x => x.getEmail().getValue() === newAutor.email) || this.alunoService.alunos.find(x => x.getEmail().getValue() === newAutor.email)) {
+  async createAutor(newAutor: PostUsuarioDTO): Promise<string> {
+    if ((await this.autoresRepository.find()).find(x => x.getEmail().getValue() === newAutor.email) || (await this.alunosRepository.find()).find(x => x.getEmail().getValue() === newAutor.email)) {
       throw new Error("Já existe um autor com esse email");
     }
 
     try {
-      const autor = new Autor(newAutor.nome, newAutor.email, newAutor.idade);
-      this.autores.push(autor);
+      const autor = Autor.create(newAutor.nome, newAutor.email, newAutor.idade);
+      await this.autoresRepository.save(autor);
       return autor.getId();
     }
     catch (e) {
@@ -29,26 +28,24 @@ export class AutorService {
     }
   }
 
-  getAutor(): GetAutorDTO[] {
+  async getAutor(): Promise<GetAutorDTO[]> {
     let allAutor: GetAutorDTO[] = [];
 
-    this.autores.forEach(autor => {
+    (await this.autoresRepository.find()).forEach(autor => {
       allAutor.push(new GetAutorDTO(autor.getId(), autor.getNome().getValue(), autor.getIdade().getValue()));
     });
 
     return allAutor;
   }
 
-  getAutorById(id: string): GetAutorVerboseDTO {
-    const autor: Autor | undefined = this.autores.find(autor => autor.getId() === id);
+  async getAutorById(id: string): Promise<GetAutorVerboseDTO> {
+    const autor: Autor | undefined = (await this.autoresRepository.find({relations: { cursosCriados: true }})).find(autor => autor.getId() === id);
 
     if (!autor) {
       throw new HttpException('Autor não encontrado', HttpStatus.NOT_FOUND);
     }
 
-    const gotCursosCriados: Curso[] = this.cursoService.cursos.filter(curso => curso.getAutor().getId() === id);
-
-    const cursosCriados: GetCursoDTO[] = gotCursosCriados.map<GetCursoDTO>((curso: Curso) => { return new GetCursoDTO(curso.getId(), curso.getNome().getValue(), curso.getDescricao().getValue(), curso.getCargaHoraria().getValue()) });
+    const cursosCriados: GetCursoDTO[] = autor.cursosCriados.map<GetCursoDTO>(curso => { return new GetCursoDTO(curso.getId(), curso.getNome().getValue(), curso.getDescricao().getValue(), curso.getCargaHoraria().getValue()) });
 
     return new GetAutorVerboseDTO(autor.getNome().getValue(), autor.getEmail().getValue(), autor.getIdade().getValue(), cursosCriados);
   }

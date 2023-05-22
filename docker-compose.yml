@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  api: 
+    env_file:
+      - .env
+    depends_on:
+      - db
+    build: ./
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - .:/home/app
+      - /home/app/node_modules
+  
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "engsoft"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "1234567"
+    ports:
+      - "5432:5432"
