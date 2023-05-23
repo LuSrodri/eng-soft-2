@@ -9,14 +9,14 @@ export class AlunoController {
   constructor(private readonly alunoService: AlunoService) { }
 
   @Get()
-  getAlunos(): GetAlunoDTO[] {
-    return this.alunoService.getAlunos();
+  async getAlunos(): Promise<GetAlunoDTO[]> {
+    return await this.alunoService.getAlunos();
   }
 
   @Get(':id')
-  getAlunoById(@Param() params: any): GetAlunoVerboseDTO | Error {
+  async getAlunoById(@Param() params: any): Promise<GetAlunoVerboseDTO | Error> {
     try {
-      return this.alunoService.getAlunoById(params.id);
+      return await this.alunoService.getAlunoById(params.id);
     }
     catch (error) {
       throw error;
@@ -24,9 +24,9 @@ export class AlunoController {
   }
 
   @Post()
-  createAluno(@Body() newAluno: PostUsuarioDTO): { id: string } {
+  async createAluno(@Body() newAluno: PostUsuarioDTO): Promise<{ id: string; }> {
     try {
-      const id = this.alunoService.createAluno(newAluno);
+      const id = await this.alunoService.createAluno(newAluno);
       return { id };
     }
     catch (e) {

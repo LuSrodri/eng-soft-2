@@ -9,14 +9,14 @@ export class AutorController {
   constructor(private readonly autorService: AutorService) { }
 
   @Get()
-  getAutor(): GetAutorDTO[] {
-    return this.autorService.getAutor();
+  async getAutor(): Promise<GetAutorDTO[]> {
+    return await this.autorService.getAutor();
   }
 
   @Get(':id')
-  getAutorById(@Param() params: any): GetAutorVerboseDTO | Error {
+  async getAutorById(@Param() params: any): Promise<GetAutorVerboseDTO | Error> {
     try {
-      return this.autorService.getAutorById(params.id);
+      return await this.autorService.getAutorById(params.id);
     }
     catch (error) {
       throw error;
@@ -24,9 +24,9 @@ export class AutorController {
   }
 
   @Post()
-  createAutor(@Body() newAutor: PostUsuarioDTO): { id: string } {
+  async createAutor(@Body() newAutor: PostUsuarioDTO): Promise<{ id: string; }> {
     try {
-      const id = this.autorService.createAutor(newAutor);
+      const id = await this.autorService.createAutor(newAutor);
       return { id };
     }
     catch (e) {

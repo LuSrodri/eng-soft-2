@@ -9,14 +9,14 @@ export class CursoController {
   constructor(private readonly cursoService: CursoService) { }
 
   @Get()
-  getAlunos(): GetCursoDTO[] {
-    return this.cursoService.getCursos();
+  async getCursos(): Promise<GetCursoDTO[]> {
+    return await this.cursoService.getCursos();
   }
 
   @Get(':id')
-  getCursoById(@Param() params: any): GetCursoVerboseDTO | Error {
+  async getCursoById(@Param() params: any): Promise<GetCursoVerboseDTO | Error> {
     try {
-      return this.cursoService.getCursoById(params.id);
+      return await this.cursoService.getCursoById(params.id);
     }
     catch (error) {
       throw error;
@@ -24,9 +24,9 @@ export class CursoController {
   }
 
   @Post()
-  createAluno(@Body() newAluno: PostCursoDTO): { id: string } {
+  async createCurso(@Body() newAluno: PostCursoDTO): Promise<{ id: string; }> {
     try {
-      const id = this.cursoService.createCurso(newAluno);
+      const id = await this.cursoService.createCurso(newAluno);
       return { id };
     }
     catch (e) {
@@ -35,9 +35,9 @@ export class CursoController {
   }
 
   @Post(':idCurso/matricular/:idAluno')
-  matricularAluno(@Param() params: any): void {
+  async matricularAluno(@Param() params: any): Promise<void> {
     try {
-      this.cursoService.matricularAluno(params.idCurso, params.idAluno);
+      await this.cursoService.matricularAluno(params.idCurso, params.idAluno);
     }
     catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
