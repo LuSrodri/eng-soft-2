@@ -3,8 +3,8 @@ require('dotenv').config()
 if (process.env.ENVIRON === "DEV") {
     module.exports = {
         type: 'postgres',
-        host: 'localhost',
-        port: '5432',
+        host: 'db',
+        port: 5432,
         username: 'root',
         password: '1234567',
         database: 'engsoft',

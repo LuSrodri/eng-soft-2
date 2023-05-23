@@ -57,25 +57,26 @@ export class CursoService {
   }
 
   async matricularAluno(idCurso: string, idAluno: string): Promise<boolean> {
-    const curso: Curso | undefined = (await this.cursosRepository.find()).find(curso => curso.getId() === idCurso);
-    const aluno: Aluno | undefined = (await this.alunosRepository.find()).find(aluno => aluno.getId() === idAluno);
+    const curso: Curso | undefined = (await this.cursosRepository.find({ relations: {autor: true, alunos: true} })).find(curso => curso.getId() === idCurso);
 
     if (!curso) {
       throw new HttpException('Curso não encontrado', HttpStatus.NOT_FOUND);
     }
 
+    const aluno: Aluno | undefined = (await this.alunosRepository.find({ relations: {cursosMatriculados: true} })).find(aluno => aluno.getId() === idAluno);
+    
     if (!aluno) {
       throw new HttpException('Aluno não encontrado', HttpStatus.NOT_FOUND);
     }
 
-    if (curso.getAlunos().find(aluno => aluno.getId() === idAluno)) {
+    if (curso.alunos.find(aluno => aluno.getId() === idAluno)) {
       throw new HttpException('Aluno já matriculado no curso', HttpStatus.BAD_REQUEST);
     }
 
     curso.alunos = [...curso.alunos, aluno];
     aluno.cursosMatriculados = [...aluno.cursosMatriculados, curso];
-    this.cursosRepository.update(curso.getId(), curso);
-    this.alunosRepository.update(aluno.getId(), aluno);
+    this.cursosRepository.save(curso);
+    this.alunosRepository.save(aluno);
 
     return true;
   }

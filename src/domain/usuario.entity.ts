@@ -16,7 +16,7 @@ export default abstract class Usuario {
                 return nome.getValue();
             },
             from(nome: string): NomeUsuario {
-                return NomeUsuario.create(nome);
+                return new NomeUsuario(nome);
             }
         }
     })
@@ -30,7 +30,7 @@ export default abstract class Usuario {
                 return email.getValue();
             },
             from(email: string): EmailUsuario {
-                return EmailUsuario.create(email);
+                return new EmailUsuario(email);
             }
         }
     })
@@ -44,7 +44,7 @@ export default abstract class Usuario {
                 return idade.getValue();
             },
             from(idade: number): IdadeUsuario {
-                return IdadeUsuario.create(idade);
+                return new IdadeUsuario(idade);
             }
         }
     })

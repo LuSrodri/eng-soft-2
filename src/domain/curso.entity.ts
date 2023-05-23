@@ -21,7 +21,7 @@ export default class Curso {
                 return nome.getValue();
             },
             from(nome: string): NomeCurso {
-                return NomeCurso.create(nome);
+                return new NomeCurso(nome);
             }
         }
     })
@@ -35,7 +35,7 @@ export default class Curso {
                 return descricao.getValue();
             },
             from(descricao: string): DescricaoCurso {
-                return DescricaoCurso.create(descricao);
+                return new DescricaoCurso(descricao);
             }
         }
     })
@@ -49,7 +49,7 @@ export default class Curso {
                 return cargaHoraria.getValue();
             },
             from(cargaHoraria: number): CargaHorariaCurso {
-                return CargaHorariaCurso.create(cargaHoraria);
+                return new CargaHorariaCurso(cargaHoraria);
             }
         }
     })
