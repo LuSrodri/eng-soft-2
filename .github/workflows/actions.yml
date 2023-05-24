@@ -51,18 +51,25 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} npm run test
       - name: Run coverage
         run: ${{ steps.detect-package-manager.outputs.runner }} npm run test:cov > MESSAGE
-      - run: npm install execa
       - name: Show coverage
         uses: actions/github-script@v6
         with:
           script: |
-            const execa = require('execa')
-            const { stdout } = await execa('echo $MESSAGE');
+            let myOutput = '';
+
+            const options = {};
+            options.listeners = {
+              stdout: (data) => {
+                myOutput += data.toString();
+              }
+            };
+
+            await exec.exec('echo $MESSAGE', options);
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: stdout
+              body: myOutput
             });
             
