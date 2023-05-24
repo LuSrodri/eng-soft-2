@@ -53,21 +53,12 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let myOutput = 'Coverage: \n';
-
-            const options = {};
-            options.listeners = {
-              stdout: (data) => {
-                myOutput += data.toString();
-              }
-            };
-
-            await exec.exec('npm run test:cov');
+            const execReturn = await exec.getExecOutput('npm run test:cov');
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: myOutput
+              body: ("Coverage \n" + execReturn.stdout)
             });
             
