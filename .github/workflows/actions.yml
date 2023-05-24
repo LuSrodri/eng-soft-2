@@ -55,9 +55,17 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "Test ran 😎"
-            })
+            const { exec } = require('child_process');
+            exec('echo $MESSAGE',
+              (error, stdout, stderr) => {
+                if (error !== null) {
+                     exec('exit 1');
+                }
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: stdout
+                });
+             });
+            
