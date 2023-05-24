@@ -50,15 +50,28 @@ jobs:
       - name: Run tests
         run: ${{ steps.detect-package-manager.outputs.runner }} npm run test
       - name: Show coverage
+        continue-on-error: true
         uses: actions/github-script@v6
         with:
           script: |
             const execReturn = await exec.getExecOutput('npm run test:cov');
             
+            if (execReturn.exitCode === 1) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: ("**Test Coverage** \n" + execReturn.stderr)
+              });
+
+              return;
+            }
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: ("**Test Coverage** \n" + execReturn.stdout)
             });
+
             
