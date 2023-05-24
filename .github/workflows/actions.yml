@@ -52,11 +52,13 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} npm run test:cov > MESSAGE
       - name: Show coverage
         uses: actions/github-script@v6
+        env:
+          MESSAGE_COMMENT: $MESSAGE
         with:
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: env.MESSAGE
+              body: process.env.MESSAGE_COMMENT
             })
