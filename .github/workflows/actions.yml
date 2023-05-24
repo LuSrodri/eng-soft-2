@@ -49,6 +49,12 @@ jobs:
       - name: Run tests
         run: ${{ steps.detect-package-manager.outputs.runner }} npm run test
       - name: Run coverage
-        run: ${{ steps.detect-package-manager.outputs.runner }} npm run test:cov
-      - name: Coverage
-        uses: ArtiomTr/jest-coverage-report-action@v2
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: ${{ steps.detect-package-manager.outputs.runner }} npm run test:cov
+            })
