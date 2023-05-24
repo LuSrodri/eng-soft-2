@@ -53,12 +53,12 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            let myOutput = '';
+            let myOutput = 'Coverage: \n';
 
             const options = {};
             options.listeners = {
               stdout: (data) => {
-                myOutput += data.toString();
+                myOutput += data;
               }
             };
 
