@@ -62,7 +62,7 @@ jobs:
               }
             };
 
-            await exec.exec('npm run test:cov';
+            await exec.exec('npm run test:cov');
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
