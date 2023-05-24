@@ -64,7 +64,7 @@ jobs:
               }
             };
 
-            await exec.exec('echo $MESSAGE', options);
+            await exec.exec('echo',['$MESSAGE'] , options);
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
