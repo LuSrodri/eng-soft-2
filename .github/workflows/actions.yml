@@ -57,7 +57,7 @@ jobs:
 
             const options = {};
             options.listeners = {
-              stdline: (data) => {
+              stdout: (data: Buffer) => {
                 myOutput += data;
               }
             };
